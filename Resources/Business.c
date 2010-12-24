@@ -11,7 +11,23 @@ class {
 	 * overwriting its contents.
 	 */
 	String param;
+
+	/* It makes sense to prefix locally created variables with a "_" to
+	 * distinguish them from those initialised by Debit.
+	 */
+	String _local;
 };
+
+def(void, Init) {
+	this->_local = String_Clone($("local variable"));
+}
+
+def(void, Destroy) {
+	/* Debit doesn't know anything about this->_local. Therefore you need to
+	 * free the memory on your own.
+	 */
+	String_Destroy(&this->_local);
+}
 
 action(ClientInformation) {
 	String html = String_Format(
@@ -19,6 +35,7 @@ action(ClientInformation) {
 			"<b>Method:</b> %<br />"
 			"<b>Referer:</b> \"%\"<br />"
 			"<b>Session-ID:</b> \"%\"<br />"
+			"<b>Contents of this->_local:</b> \"%\"<br />"
 			"<b>The parameter 'param' contains:</b> \"%\"<br />"
 			"Try <a href=\"/client/URL-transmitted+value\">URL segments</a>."
 			"<br />Try a GET request:"
@@ -36,6 +53,7 @@ action(ClientInformation) {
 		HTTP_Method_ToString(req.method),
 		req.referer,
 		req.sessionId,
+		this->_local,
 		this->param);
 
 	BufferResponse(resp, html);
@@ -54,6 +72,12 @@ action(Time) {
 
 ImplEx(Resource) = {
 	.size = sizeof(self),
+
+	/* `init' and `destroy' are optional. These are called automatically upon
+	 * initialisation and destruction of the resource.
+	 */
+	.init    = (void *) ref(Init),
+	.destroy = (void *) ref(Destroy),
 
 	/* This shares the variables which are defined within the class. Debit will
 	 * fill these automatically by their corresponding GET and POST values. You
