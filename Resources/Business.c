@@ -11,6 +11,8 @@ class {
 	 * overwriting its contents.
 	 */
 	String param;
+	String param2;
+	String param3;
 
 	/* It makes sense to prefix locally created variables with a "_" to
 	 * distinguish them from those initialised by Debit.
@@ -37,8 +39,11 @@ action(ClientInformation) {
 			"<b>Session-ID:</b> \"%\"<br />"
 			"<b>Contents of this->_local:</b> \"%\"<br />"
 			"<b>The parameter 'param' contains:</b> \"%\"<br />"
-			"Try <a href=\"/client/URL-transmitted+value\">URL segments</a>."
-			"<br />Try a GET request:"
+			"<b>The parameter 'param2' contains:</b> \"%\"<br />"
+			"<b>The parameter 'param3' contains:</b> \"%\"<br />"
+			"Try <a href=\"/client/p1-p2-p3\">URL segments (1st route)</a>.<br />"
+			"Try <a href=\"/client/URL-transmitted+value\">URL segments (2nd route)</a>.<br />"
+			"Try a GET request:"
 				"<form method=\"get\">"
 					"<input type=\"text\" name=\"param\" />"
 					"<input type=\"submit\" />"
@@ -54,7 +59,9 @@ action(ClientInformation) {
 		req.referer,
 		req.sessionId,
 		this->_local,
-		this->param);
+		this->param,
+		this->param2,
+		this->param3);
 
 	BufferResponse(resp, html);
 }
@@ -89,11 +96,16 @@ ImplEx(Resource) = {
 	 *   3. POST parameters
 	 */
 	.members = {
-		{ .name = $("param"),  Member(param) },
+		{ .name = $("param"),   Member(param)  },
+		{ .name = $("param2"),  Member(param2) },
+		{ .name = $("param3"),  Member(param3) }
 	},
 
 	.routes = {
-		{ .path   = $("/client/$param"),
+		{ .path   = $("/client/{param}-{param2}-{param3}"),
+		  .action = Action(ClientInformation) },
+
+		{ .path   = $("/client/:param"),
 		  .action = Action(ClientInformation) },
 
 		{ .path   = $("/client"),
