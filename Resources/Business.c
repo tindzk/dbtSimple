@@ -21,7 +21,7 @@ class {
 };
 
 def(void, Init) {
-	this->_local = String_Clone($("local variable"));
+	this->_local = $("local variable");
 }
 
 def(void, Destroy) {
