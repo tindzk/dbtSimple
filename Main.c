@@ -13,13 +13,13 @@
 Logger logger;
 Terminal term;
 
-void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, String file, int line) {
-	String slevel = Logger_ResolveLevel(level);
-	String sline  = Integer_ToString(line);
+void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, ProtString file, int line) {
+	ProtString slevel = Logger_ResolveLevel(level);
+	String sline = Integer_ToString(line);
 
 	Terminal_FmtPrint(&term,
 		$("[%] $ (%:%)\n"),
-		slevel, msg, file, sline);
+		slevel, msg, file, sline.prot);
 
 	String_Destroy(&sline);
 }

@@ -21,7 +21,7 @@ class {
 };
 
 def(void, Init) {
-	this->_local = $("local variable");
+	this->_local = String_Clone($("local variable"));
 }
 
 def(void, Destroy) {
@@ -56,19 +56,19 @@ action(ClientInformation) {
 		),
 
 		HTTP_Method_ToString(req.method),
-		req.referer,
-		req.sessionId,
-		this->_local,
-		this->param,
-		this->param2,
-		this->param3);
+		req.referer.prot,
+		req.sessionId.prot,
+		this->_local.prot,
+		this->param.prot,
+		this->param2.prot,
+		this->param3.prot);
 
 	BufferResponse(resp, html);
 }
 
 action(Time) {
 	String time = DateTime_Format(DateTime_GetCurrent());
-	String msg = String_Format($("The server time is: %."), time);
+	String msg = String_Format($("The server time is: %."), time.prot);
 	String_Destroy(&time);
 
 	/* The responsibility of freeing msg's memory is delegated to Debit which
