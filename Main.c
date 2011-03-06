@@ -1,3 +1,4 @@
+#import <Main.h>
 #import <Server.h>
 #import <String.h>
 #import <Logger.h>
@@ -39,10 +40,8 @@ bool startServer(Server *server, ClientListener listener) {
 	return false;
 }
 
-int main(__unused int argc, __unused char *argv[]) {
-	Signal0();
-
-	Terminal_Init(&term, File_StdIn, File_StdOut, true);
+bool Main(__unused ProtString base, __unused ProtStringArray *args) {
+	term = Terminal_New(File_StdIn, File_StdOut, true);
 
 	Logger_Init(&logger, Callback(NULL, OnLogMessage),
 		Logger_Level_Fatal |
@@ -61,7 +60,7 @@ int main(__unused int argc, __unused char *argv[]) {
 	if (!startServer(&server,
 		GenericClientListener_AsClientListener(&listener)))
 	{
-		return ExitStatus_Failure;
+		return false;
 	}
 
 	try {
@@ -70,19 +69,10 @@ int main(__unused int argc, __unused char *argv[]) {
 		}
 	} clean catch(Signal, SigInt) {
 		Logger_Info(&logger, $("Server shutdown."));
-	} catchAny {
-		Exception_Print(e);
-
-#if Exception_SaveTrace
-		Backtrace_PrintTrace(__exc_mgr.e.trace, __exc_mgr.e.traceItems);
-#endif
-
-		excReturn ExitStatus_Failure;
 	} finally {
 		Server_Destroy(&server);
-
 		Terminal_Destroy(&term);
 	} tryEnd;
 
-	return ExitStatus_Success;
+	return true;
 }
