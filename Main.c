@@ -40,7 +40,11 @@ bool startServer(Server *server, ClientListener listener) {
 	return false;
 }
 
-bool Main(__unused ProtString base, __unused ProtStringArray *args) {
+bool Main (
+	__unused ProtString base,
+	__unused ProtStringArray *args,
+	__unused ProtStringArray *env
+) {
 	term = Terminal_New(File_StdIn, File_StdOut, true);
 
 	Logger_Init(&logger, Callback(NULL, OnLogMessage),
