@@ -22,6 +22,7 @@ action(Redirection) {
 }
 
 ImplEx(Resource) = {
+	.name = $("Default"),
 	.size = sizeof(self),
 
 	.members = {

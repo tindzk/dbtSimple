@@ -78,6 +78,7 @@ action(Time) {
 }
 
 ImplEx(Resource) = {
+	.name = $("Business"),
 	.size = sizeof(self),
 
 	/* `init' and `destroy' are optional. These are called automatically upon
