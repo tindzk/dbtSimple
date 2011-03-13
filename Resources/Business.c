@@ -55,20 +55,20 @@ action(ClientInformation) {
 				"</form>"
 		),
 
-		HTTP_Method_ToString(req.method),
-		req.referer.prot,
-		req.sessionId.prot,
-		this->_local.prot,
-		this->param.prot,
-		this->param2.prot,
-		this->param3.prot);
+		HTTP_Method_ToString(Request_GetMethod(req)),
+		Request_GetReferer(req),
+		Request_GetSessionId(req),
+		this->_local.rd,
+		this->param.rd,
+		this->param2.rd,
+		this->param3.rd);
 
 	BufferResponse(resp, html);
 }
 
 action(Time) {
 	String time = DateTime_Format(DateTime_GetCurrent());
-	String msg = String_Format($("The server time is: %."), time.prot);
+	String msg = String_Format($("The server time is: %."), time.rd);
 	String_Destroy(&time);
 
 	/* The responsibility of freeing msg's memory is delegated to Debit which
