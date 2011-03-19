@@ -2,7 +2,7 @@
 
 mkdir -p Build/{Jivai,Debit,Project}
 
-../Jivai-Utils/jutils.bin         \
+../Depend/Depend.bin              \
 	build                         \
 	output=httpd.bin              \
 	manifest=Manifest.h           \
