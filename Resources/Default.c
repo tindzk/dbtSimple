@@ -32,13 +32,13 @@ ImplEx(Resource) = {
 	.routes = {
 		/* Each route must be connected to an action. */
 		{ .path   = $("/"),
-		  .action = Action(Home) },
+		  .action = ref(Home) },
 
 		/* You can define an optional fall-back route which is used by default
 		 * when nothing else matches.
 		 */
 		{ .path   = $("*"),
-		  .action = Action(Redirection) }
+		  .action = ref(Redirection) }
 	}
 };
 

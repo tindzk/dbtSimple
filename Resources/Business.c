@@ -84,8 +84,8 @@ ImplEx(Resource) = {
 	/* `init' and `destroy' are optional. These are called automatically upon
 	 * initialisation and destruction of the resource.
 	 */
-	.init    = (void *) ref(Init),
-	.destroy = (void *) ref(Destroy),
+	.init    = ref(Init),
+	.destroy = ref(Destroy),
 
 	/* This shares the variables which are defined within the class. Debit will
 	 * fill these automatically by their corresponding GET and POST values. You
@@ -104,16 +104,16 @@ ImplEx(Resource) = {
 
 	.routes = {
 		{ .path   = $("/client/{param}-{param2}-{param3}"),
-		  .action = Action(ClientInformation) },
+		  .action = ref(ClientInformation) },
 
 		{ .path   = $("/client/:param"),
-		  .action = Action(ClientInformation) },
+		  .action = ref(ClientInformation) },
 
 		{ .path   = $("/client"),
-		  .action = Action(ClientInformation) },
+		  .action = ref(ClientInformation) },
 
 		{ .path   = $("/time"),
-		  .action = Action(Time) }
+		  .action = ref(Time) }
 	}
 };
 
