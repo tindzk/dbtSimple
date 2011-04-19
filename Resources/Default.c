@@ -13,12 +13,12 @@ action(Home) {
 	BufferResponse(resp, $$(
 		"Click <a href=\"/non-existent-route\">here</a> to test the fall-back route.<br />"
 		"Click <a href=\"/client\">here</a> for your browser information.<br />"
-		"Click <a href=\"/time\">here</a> for the server time.<br />"
+		"Click <a href=\"/disp-time\">here</a> for the server time.<br />"
 	));
 }
 
 action(Redirection) {
-	RedirectResponse(resp, $$("/time"));
+	RedirectResponse(resp, $$("/disp-time"));
 }
 
 ImplEx(Resource) = {

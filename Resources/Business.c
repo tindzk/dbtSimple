@@ -112,7 +112,7 @@ ImplEx(Resource) = {
 		{ .path   = $("/client"),
 		  .action = ref(ClientInformation) },
 
-		{ .path   = $("/time"),
+		{ .path   = $("/disp-time"),
 		  .action = ref(Time) }
 	}
 };
