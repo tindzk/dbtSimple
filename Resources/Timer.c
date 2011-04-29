@@ -1,4 +1,4 @@
-#import <EventLoop.h>
+#import <Timer.h>
 #import <Debit/HttpConnection.h>
 #import <Debit/BufferResponse.h>
 
@@ -10,8 +10,9 @@ class {
 	RdString seconds;
 };
 
-def(void, OnTimer, __unused u64 dropped, __unused Timer *timer) {
+def(bool, OnTimer, __unused u64 dropped) {
 	BufferResponse(this->resp, $$("Timer completed."));
+	return false;
 }
 
 action(Wait) {
@@ -24,8 +25,11 @@ action(Wait) {
 			excGoto error;
 		}
 
-		EventLoop_AddTimer(EventLoop_GetInstance(),
-			seconds, EventLoop_OnTimer_For(this, ref(OnTimer)));
+		Timer timer = Timer_New(ClockType_Monotonic);
+		Timer_SetTimer(&timer, seconds);
+
+		Tasks_Enqueue(tasks,
+			Timer_AsTask(&timer, Timer_OnTimer_For(this, ref(OnTimer))));
 	} catchModule(Integer) {
 		excGoto error;
 	} finally {
@@ -37,19 +41,17 @@ action(Wait) {
 	}
 }
 
-def(void, OnInterval, __unused u64 dropped, Timer *timer) {
+def(bool, OnInterval, __unused u64 dropped) {
 	if (this->cnt == 3) {
-		EventLoop_DetachTimer(EventLoop_GetInstance(), timer);
 		BufferResponse(this->resp, $$("Interval triggered three times."));
 
-		/* After BufferResponse() and Response_Flush(), respectively, accessing
-		 * member variables is forbidden as the resource has been most likely
-		 * already destroyed.
-		 */
-		return;
+		/* Detach timer. */
+		return false;
 	}
 
 	this->cnt++;
+
+	return true;
 }
 
 action(Interval) {
@@ -63,8 +65,11 @@ action(Interval) {
 			excGoto error;
 		}
 
-		EventLoop_AddIntervalTimer(EventLoop_GetInstance(),
-			seconds, EventLoop_OnTimer_For(this, ref(OnInterval)));
+		Timer timer = Timer_New(ClockType_Monotonic);
+		Timer_SetInterval(&timer, seconds);
+
+		Tasks_Enqueue(tasks,
+			Timer_AsTask(&timer, Timer_OnTimer_For(this, ref(OnInterval))));
 	} catchModule(Integer) {
 		excGoto error;
 	} finally {
