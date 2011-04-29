@@ -13,10 +13,10 @@ GET /timer/wait/1 HTTP/1.1
 Host: localhost
 Connection: close
 
-" | nc -q -1 127.0.0.1 8080
+" | nc 127.0.0.1 8080
 
 echo "GET /timer/interval/3 HTTP/1.1
 Host: localhost
 Connection: close
 
-" | nc -q -1 127.0.0.1 8080
+" | nc 127.0.0.1 8080
